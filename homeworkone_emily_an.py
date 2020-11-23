@@ -15,21 +15,21 @@ import pandas as pd
 from pandas import Series, DataFrame
 
 weatherData = pd.read_csv('http://storm.cis.fordham.edu/~yli/data/weather.csv')
-#Q1
+#Q1 Show columns of the dataset. 
 weatherData
 
-#Q2
+#Q2  How many cases we have in this dataset (one row is a case)
 print(len(weatherData))
 
-#Q3
+#Q3 Show some statistics info about temperature and humidity such as mean, min, max, quantiles
 weatherData.temperature.describe()
 
 weatherData.humidity.describe()
 
-#Q4
+#Q4 What are modes for each column. 
 weatherData.mode()
 
-#Q5
+#Q5 Are there outliers in the above two columns (use the formula we have used in class) 
 q25, q75=np.percentile(weatherData['temperature'],[25,75]) 
 IQR = q75-q25
 IQR
@@ -58,7 +58,7 @@ weatherData[mask1]
 mask2 = weatherData['humidity'] < lowerB
 weatherData[mask2]
 
-#Q6
+#Q6 Draw pairwise plots for columns with numerical values. 
 import matplotlib.pyplot as plt 
 import seaborn as sns
 
@@ -68,11 +68,11 @@ sns.pairplot(
     y_vars=["temperature", "humidity"],
 )
 
-#Q7
+#Q7 Draw boxplots and bar chart for columns with numerical values. 
 bp = weatherData.plot.box(sharey = True, figsize = (8,4))
 bp = weatherData.plot.bar(sharey = True, figsize = (8,4))
 
-#Q8
+#Q8 Draw scatter plot for two columns with numerical values. 
 fig, ax=plt.subplots(1, figsize=(6,6))
 
 weatherData.plot(ax=ax, x=['temperature'],y=['humidity'], kind='scatter', #for any two columns in the dataframe set x and y equal to those columns
@@ -108,7 +108,8 @@ ax.set(xlabel='index', ylabel='humidity',
        title='Humidity')
 plt.legend(loc='best', frameon=True)
 
-#Q9
+#Q9 Create a pivot table to show the mean values of humidity, temperature in terms of whether
+players play vs. outlook. 
 import pandas as pd
 
 table = weatherData.pivot_table(index='outlook',columns='Play',
@@ -116,7 +117,8 @@ table = weatherData.pivot_table(index='outlook',columns='Play',
                        values=['humidity','temperature'])
 table
 
-#Q10
+#Q10  Create a pivot table to show the max values of humidity in terms of whether players play vs.
+#different temperature groups starting from 45 degree and step is 10 degrees. 
 temp = pd.cut(weatherData['temperature'], [45,55,65,75,85,95])
 table = weatherData.pivot_table(index=temp, columns='Play',
                                 aggfunc='max',values=['humidity'], fill_value=0)
