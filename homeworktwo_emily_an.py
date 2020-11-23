@@ -15,28 +15,28 @@ from pandas import Series, DataFrame
 pd.set_option('precision', 2)
 np.set_printoptions(precision=2)
 
-"""Question 1 Find out the size of the dataset and information about columns such as names, types of
-data. 
-"""
+#Question 1 Find out the size of the dataset and information about columns such as names, types of
+#data. 
+
 
 df = pd.read_csv('http://storm.cis.fordham.edu/~yli/data/small_telco_Homework2.csv')
 
 df.info()
 df
 
-"""Question 2 2. Find the statistics information of all columns with numerical values."""
+#Question 2 2. Find the statistics information of all columns with numerical values.
 
 df.describe(include=[np.number])
 
-"""Question 3 Values of columns such as region, internet and class are categorical data, however, the
-system detected them as numerical values by default.
-"""
+#Question 3 Values of columns such as region, internet and class are categorical data, however, the
+#system detected them as numerical values by default.
+
 
 df['region'] = df['region'].astype('category')
 df['internet'] = df['internet'].astype('category')
 df['class'] = df['class'].astype('category')
 
-"""Question 4 Draw three bar plots for the above mentioned three categorical data columns"""
+#Question 4 Draw three bar plots for the above mentioned three categorical data columns
 
 # Commented out IPython magic to ensure Python compatibility.
 import matplotlib.pyplot as plt 
@@ -49,9 +49,8 @@ df['internet'].value_counts().sort_index().plot.bar()
 
 df['class'].value_counts().sort_index().plot.bar()
 
-"""Question 5 Draw density plots for columns with numerical data, such as age, income, long_Month,
-longten, and balance. 
-"""
+#Question 5 Draw density plots for columns with numerical data, such as age, income, long_Month,
+#longten, and balance. 
 
 df['age'].plot.density() #density plot for age
 
@@ -63,15 +62,14 @@ df['longten'].plot.density() #density plot for longten
 
 df['balance'].plot.density() #density plot for balance
 
-"""Question 6  Check whether columns with numerical data have outliers by drawing box plots (use the
-formula we discussed in class), if they do, replace them with the closer boundary.
+#Question 6  Check whether columns with numerical data have outliers by drawing box plots (use the
+#formula we discussed in class), if they do, replace them with the closer boundary.
 
-Box Plot for Age
-"""
+#Box Plot for Age
 
 df['age'].plot.box(whis=2) #no outliers
 
-"""Box Plot for Income"""
+#Box Plot for Income
 
 df['income'].plot.box(whis=2) #outliers found
 
@@ -99,7 +97,7 @@ for i in mask_upper.index: #replace outliers with upper boundary
 mask2_upper = df[df['new_income']> upper] #check outliers were changed
 mask2_upper
 
-"""Box Plot for long_Month"""
+#Box Plot for long_Month
 
 df['long_Month'].plot.box(whis=2) #outliers found
 
@@ -119,7 +117,7 @@ for i in mask_upper.index: #replace outliers with upper boundary
 mask2_upper = df[df['new_long_Month'] > upper] #check that outliers were replaced with bounds
 mask2_upper
 
-"""Box Plot for Longten"""
+#Box Plot for Longten
 
 df['longten'].plot.box(whis=2) #outliers found
 
@@ -140,30 +138,30 @@ for i in mask_upper.index:
 mask2_upper = df[df['new_longten'] > upper] #check bounds changed
 mask2_upper
 
-"""Box Plot for Balance"""
+#Box Plot for Balance
 
 df['balance'].plot.box(whis=2) #no outliers
 
 df
 
-"""Create new copy with new columns and existing columns you want to keep"""
+#Create new copy with new columns and existing columns you want to keep
 
 df2 = df.drop(columns=['income', 'long_Month', 'longten'])
 df2
 
-"""Question 7
-Please fill missing values in balance column with group mean. There are two different
-groups of columns in this dataset. To check whether to use group mean of a column with
-categorical data, study their group means of balance; if there are big differences between
-group means, the column is a good candidate. To check whether to use group mean of a
-column with numerical data, exam the density plots we have created, based on their
-patterns, select the column having similar distribution as the balance column. If a column
-eventually selected has numerical data, create bins first, then use bin mean to fill the
-missing value. Please make this decision by yourself after checking all candidates, and
-explain your decision.
+#Question 7
+#Please fill missing values in balance column with group mean. There are two different
+#groups of columns in this dataset. To check whether to use group mean of a column with
+#categorical data, study their group means of balance; if there are big differences between
+#group means, the column is a good candidate. To check whether to use group mean of a
+#column with numerical data, exam the density plots we have created, based on their
+#patterns, select the column having similar distribution as the balance column. If a column
+#eventually selected has numerical data, create bins first, then use bin mean to fill the
+#missing value. Please make this decision by yourself after checking all candidates, and
+#explain your decision.
 
-Check Categorical Columns
-"""
+#Check Categorical Columns
+
 
 df2.groupby('region')['balance'].mean() #good candidate due to large difference between group mean
 
@@ -171,7 +169,7 @@ df2.groupby('internet')['balance'].mean() # good candidate due to large differen
 
 df2.groupby('class')['balance'].mean() # bad candidate
 
-"""Fill in Group Mean for Good Category Candidates"""
+#Fill in Group Mean for Good Category Candidates
 
 #region column
 df2['balance_with_region'] = df2['balance']
@@ -185,7 +183,7 @@ d = {0:2.93, 1:2.79}
 df2['balance_with_internet'] = df2.set_index('internet')['balance'].fillna(d).reset_index()['balance']
 df2.head(10)
 
-"""Check Numerical Columns"""
+#Check Numerical Columns
 
 df2['balance'].plot.density()
 
@@ -197,7 +195,7 @@ df2['new_long_Month'].plot.density() # bad candidate
 
 df2['new_longten'].plot.density() # bad candidate
 
-"""Fill in Group Mean for Age Column"""
+#Fill in Group Mean for Age Column
 
 #binning
 df2['age_bin_new'] = pd.qcut(df2['age'],4)
@@ -216,9 +214,8 @@ df2['balance_with_age'] = df2['balance_with_age'].fillna(df2['age_mean_bin'])
 
 df2.head(10)
 
-"""Question 8 Smooth the new income column (after removing outliers) with mean of equal-width bins
-(the number of bins is 10)
-"""
+#Question 8 Smooth the new income column (after removing outliers) with mean of equal-width bins
+#(the number of bins is 10)
 
 df2['income_bin'] = pd.cut(df2['new_income'], 10) #cut into 10 equal bins
 df2.groupby('income_bin')['new_income'].count()
@@ -239,15 +236,15 @@ df2.groupby('income_bin')['new_income'].max().index
 bin_results = (df2.groupby('income_bin')['new_income'].agg(['max','min']))
 bin_results
 
-"""Question 9  Check whether there are columns positively related with each other. """
+#Question 9  Check whether there are columns positively related with each other. 
 
 import seaborn as sns
 df2.corr()
 #all columns are positively correlated
 
-"""Question 10 Perform Min_Max Normalization and Z_score Normalization on all columns with numerical
-data, compare them, which method you prefer? 
-"""
+#Question 10 Perform Min_Max Normalization and Z_score Normalization on all columns with numerical
+#data, compare them
+
 
 from sklearn import preprocessing
 pd.set_option('precision',2)
@@ -309,5 +306,3 @@ df2_x_train_MinMax
 x_train = df2['balance']
 x_scaled = preprocessing.scale(x_train)
 x_scaled
-
-"""I prefer using the Z score method because I find it is a bit more efficient"""
